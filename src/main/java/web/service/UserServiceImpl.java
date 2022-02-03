@@ -8,7 +8,6 @@ import java.util.List;
 
 @Component
 public class UserServiceImpl implements UserService{
-
     UserDaoImpl userDao = new UserDaoImpl();
 
     @Override
@@ -17,13 +16,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void updateUser() {
-        userDao.updateUser();
+    public void updateUser(User updatedUser, Long id) {
+        userDao.updateUser(updatedUser, id);
     }
 
     @Override
-    public void deleteUser() {
-        userDao.deleteUser();
+    public void deleteUser(Long id) {
+        userDao.deleteUser(id);
     }
 
     @Override

@@ -7,7 +7,6 @@ import java.util.List;
 
 public class UserDaoImpl implements UserDao{
     private static Long USER_COUNTER = 0L;
-
     List<User> userList = new ArrayList<>();
 
     {
@@ -17,7 +16,6 @@ public class UserDaoImpl implements UserDao{
         userList.add(new User(++USER_COUNTER, "Olga", "Kat", 90));
     }
 
-
     @Override
     public void addUser(User user) {
         user.setId(++USER_COUNTER);
@@ -25,18 +23,21 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
-    public void updateUser() {
-
+    public void updateUser(User updatedUser, Long id) {
+        User willChange = getUser(id);
+        willChange.setName(updatedUser.getName());
+        willChange.setSurname(updatedUser.getSurname());
+        willChange.setAge(updatedUser.getAge());
     }
 
     @Override
-    public void deleteUser() {
-
+    public void deleteUser(Long id) {
+        userList.removeIf(user -> user.getId().equals(id));
     }
 
     @Override
     public User getUser(Long id) {
-        return userList.stream().filter(user -> user.getId() == id).findAny().orElse(null);
+        return userList.stream().filter(user -> user.getId().equals(id)).findAny().orElse(null);
     }
 
     @Override
