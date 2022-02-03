@@ -1,4 +1,57 @@
 package web.config;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import web.model.User;
+
+import javax.sql.DataSource;
+import java.util.Properties;
+
+@Configuration
+@PropertySource("classpath:db.properties")
+@EnableTransactionManagement
+@ComponentScan
 public class DataBaseConfig {
+    @Autowired
+    private Environment environment;
+
+    @Bean
+    public DataSource getDataSource() {
+        DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
+        driverManagerDataSource.setDriverClassName(environment.getProperty("db.driver"));
+        driverManagerDataSource.setUrl(environment.getProperty("db.url"));
+        driverManagerDataSource.setUsername(environment.getProperty("db.username"));
+        driverManagerDataSource.setPassword(environment.getProperty("db.password"));
+        return driverManagerDataSource;
+    }
+
+    @Bean
+    public LocalSessionFactoryBean getEntityFactory() {
+        LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
+        factoryBean.setDataSource(getDataSource());
+
+        Properties props=new Properties();
+        props.put("hibernate.show_sql", environment.getProperty("hibernate.show_sql"));
+        props.put("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl.auto"));
+
+        factoryBean.setHibernateProperties(props);
+        factoryBean.setAnnotatedClasses(User.class);
+        return factoryBean;
+    }
+
+    @Bean
+    public HibernateTransactionManager getTransactionManager() {
+        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+        transactionManager.setSessionFactory(getEntityFactory().getObject());
+        return transactionManager;
+    }
 }
