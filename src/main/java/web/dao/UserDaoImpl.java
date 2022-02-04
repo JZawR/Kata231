@@ -3,47 +3,35 @@ package web.dao;
 import org.springframework.stereotype.Repository;
 import web.model.User;
 
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao{
-    private static Long USER_COUNTER = 0L;
-    List<User> userList = new ArrayList<>();
 
-    {
-        userList.add(new User(++USER_COUNTER, "Vasa", "Get", 88));
-        userList.add(new User(++USER_COUNTER, "Vanya", "Kat", 99));
-        userList.add(new User(++USER_COUNTER, "Lora", "Get", 77));
-        userList.add(new User(++USER_COUNTER, "Olga", "Kat", 90));
-    }
+    @PersistenceContext
+    private EntityManager em;
 
-    @Override
     public void addUser(User user) {
-        user.setId(++USER_COUNTER);
-        userList.add(user);
+        em.persist(user);
     }
 
-    @Override
     public void updateUser(User updatedUser, Long id) {
-        User willChange = getUser(id);
-        willChange.setName(updatedUser.getName());
-        willChange.setSurname(updatedUser.getSurname());
-        willChange.setAge(updatedUser.getAge());
+        em.merge(updatedUser);
     }
 
-    @Override
     public void deleteUser(Long id) {
-        userList.removeIf(user -> user.getId().equals(id));
+        em.remove(getUser(id));
     }
 
-    @Override
     public User getUser(Long id) {
-        return userList.stream().filter(user -> user.getId().equals(id)).findAny().orElse(null);
+        return em.find(User.class, id);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
     public List<User> getAllUsers() {
-        return userList;
+        return em.createQuery("From User").getResultList();
     }
 }
