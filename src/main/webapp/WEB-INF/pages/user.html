@@ -11,11 +11,10 @@
 <p th:text="${man.getSurname()}">VALUE</p>
 <p th:text="${man.getAge()}">VALUE</p>
 
-<a th:href="@{/{id}/edit/(id=${man.getId()})}">Update</a>
-
+<form method="LINK" th:action="@{/{id}/edit(id=${man.getId()})}">
+    <input type="submit" value="Edit">
+</form>
 <br>
-<br>
-
 <form th:method="DELETE" th:action="@{/{id}(id=${man.getId()})}">
     <input type="submit" value="Delete">
 </form>

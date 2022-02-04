@@ -20,6 +20,18 @@
         <td> <a th:href="@{/{id}(id=${user.getId()})}" th:text="${user.getName()}">name </a></td>
         <td> <a th:text="${user.getSurname()}">surname </a></td>
         <td> <a th:text="${user.getAge()}">age </a></td>
+        <td>
+            <form method="LINK" th:action="@{/{id}/edit(id=${user.getId()})}">
+                <input type="submit" value="Edit">
+            </form>
+
+
+        </td>
+        <td>
+            <form th:method="DELETE" th:action="@{/{id}(id=${user.getId()})}">
+                <input type="submit" value="Delete">
+            </form>
+        </td>
     </tr>
 </table>
 
