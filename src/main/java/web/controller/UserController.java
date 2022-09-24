@@ -1,27 +1,28 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import web.model.User;
 import web.service.UserService;
 import web.service.UserServiceImpl;
 
 @Controller
-@RequestMapping()
+@RequestMapping
 public class UserController {
     private final UserService userService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserService userServiceImpl) {
+        this.userService = userServiceImpl;
     }
 
     @GetMapping("/users")
-    public String showAllUsers(Model userModel) {
+    public ModelAndView showAllUsers(Model userModel) {
         userModel.addAttribute("people", userService.getAllUsers());
-        return "users";
+        return new ModelAndView("users");
     }
 
     @GetMapping("/{id}")
