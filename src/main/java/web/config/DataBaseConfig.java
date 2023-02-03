@@ -1,24 +1,17 @@
 package web.config;
 
 
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
-import org.springframework.jdbc.datasource.AbstractDriverBasedDataSource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import jakarta.activation.DataSource;
 
 import java.util.Properties;
 
@@ -33,7 +26,7 @@ public class DataBaseConfig {
     }
 
     @Bean
-    public AbstractDriverBasedDataSource getDataSource() {
+    public DriverManagerDataSource getDataSource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         driverManagerDataSource.setDriverClassName(environment.getProperty("db.driver"));
         driverManagerDataSource.setUrl(environment.getProperty("db.url"));

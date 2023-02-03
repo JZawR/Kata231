@@ -17,14 +17,14 @@ public class AppInit extends AbstractAnnotationConfigDispatcherServletInitialize
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[] {
+        return new Class<?>[]{
                 WebConfig.class
         };
     }
 
     @Override
     protected String[] getServletMappings() {
-        return new String[] {"/"};
+        return new String[]{"/"};
     }
 
     private void registerHiddenFieldFilter(ServletContext context) {
