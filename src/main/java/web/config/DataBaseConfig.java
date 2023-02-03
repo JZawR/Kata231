@@ -1,12 +1,16 @@
 package web.config;
 
 
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.jdbc.datasource.AbstractDriverBasedDataSource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -14,7 +18,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.sql.DataSource;
+import jakarta.activation.DataSource;
+
 import java.util.Properties;
 
 @Configuration
@@ -28,7 +33,7 @@ public class DataBaseConfig {
     }
 
     @Bean
-    public DataSource getDataSource() {
+    public AbstractDriverBasedDataSource getDataSource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         driverManagerDataSource.setDriverClassName(environment.getProperty("db.driver"));
         driverManagerDataSource.setUrl(environment.getProperty("db.url"));
@@ -43,9 +48,9 @@ public class DataBaseConfig {
         factoryBean.setDataSource(getDataSource());
         factoryBean.setPackagesToScan("web");
         Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "update"); //?
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect"); //?
-        properties.setProperty("showSQL", "true");
+        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop"); //?
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+        properties.setProperty("hibernate.show_sql", "false");
         factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         factoryBean.setJpaProperties(properties);
         return factoryBean;
@@ -59,7 +64,7 @@ public class DataBaseConfig {
     }
 
     @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 }
